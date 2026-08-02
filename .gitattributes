@@ -1,0 +1,21 @@
+# Fim de linha fixo em LF na árvore de trabalho, em toda máquina.
+#
+# POR QUE ISTO EXISTE. Alguns gates leem os bytes de arquivos e comparam com
+# texto gerado. Num clone feito no Windows com core.autocrlf=true, a árvore vem
+# em CRLF e acusa divergência mesmo sem mudança de código. A regra fixa bytes
+# reprodutíveis entre máquinas e sistemas.
+*	text=auto eol=lf
+
+# Binários: nunca converter.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.wav binary
+*.mp3 binary
+*.ogg binary
+*.glb binary
+*.gltf binary
+*.woff binary
+*.woff2 binary

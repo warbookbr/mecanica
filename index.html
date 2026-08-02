@@ -1,0 +1,79 @@
+<!doctype html>
+<!-- index.html — entrada da Mecanifica. Este repositório é só o PRODUTO: ele lê
+     peças já resolvidas de pecas-resolvidas/ e não carrega o núcleo procedural,
+     que vive na oficina em warbookbr/nos-mecanifica. -->
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta
+      name="description"
+      content="Mecanifica — simulador 3D interativo para explicar sistemas automotivos."
+    />
+    <meta name="theme-color" content="#07110f" />
+    <title>Mecanifica — oficina interativa</title>
+  </head>
+  <body>
+    <div id="app">
+      <canvas id="cena" aria-label="Visualização tridimensional interativa"></canvas>
+
+      <header class="barra">
+        <a class="marca" href="./" aria-label="Mecanifica — início">
+          <span class="marca-sinal" aria-hidden="true">M</span>
+          <span>
+            <strong>Mecanifica</strong>
+            <small>oficina interativa</small>
+          </span>
+        </a>
+        <span class="fase"><i></i> marco 1 · primeiro sistema</span>
+      </header>
+
+      <main>
+        <section class="apresentacao" aria-labelledby="titulo">
+          <p class="sobretitulo">FREIO DIANTEIRO DIREITO</p>
+          <h1 id="titulo">Veja onde o <em>freio</em> trabalha.</h1>
+          <p>
+            O carro é contexto. O conjunto real continua formado pelas mesmas
+            partes semânticas da bancada, agora no lugar em que atua.
+          </p>
+          <div class="acoes">
+            <button id="btnExplorar" class="primaria" type="button">Localizar freio</button>
+            <button id="btnFocarSistema" class="secundaria" type="button">Focar sistema</button>
+            <button id="btnExplodir" class="secundaria" type="button" aria-pressed="false">Explodir freio</button>
+            <a class="terciaria" href="https://warbookbr.github.io/nos-mecanifica/bancada.html?peca=freio-disco"
+               target="_blank" rel="noopener">Abrir bancada</a>
+          </div>
+        </section>
+
+        <aside class="modos" aria-label="Modo de visualização">
+          <span class="rotulo">VISUALIZAÇÃO</span>
+          <strong id="modoAtual">Carro completo</strong>
+          <div class="modo-acoes">
+            <button data-modo="carro" class="ativa" type="button">Carro</button>
+            <button data-modo="contexto" type="button">Contexto</button>
+            <button data-modo="isolar" type="button">Só freio</button>
+          </div>
+        </aside>
+
+        <aside class="inspetor" aria-live="polite">
+          <div class="inspetor-topo">
+            <span class="rotulo">COMPONENTE</span>
+            <button id="btnLimpar" type="button" aria-label="Limpar seleção">×</button>
+          </div>
+          <strong id="parteNome">Nenhuma peça selecionada</strong>
+          <p id="parteDescricao">Clique no freio ou escolha uma parte abaixo.</p>
+          <div id="partes" class="partes" aria-label="Partes disponíveis"></div>
+        </aside>
+
+        <div class="ajuda">
+          <span><b>arraste</b> para girar</span>
+          <span><b>role</b> para aproximar</span>
+          <span><b>clique</b> para identificar</span>
+        </div>
+      </main>
+
+      <div id="erro" class="erro" role="alert" hidden></div>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

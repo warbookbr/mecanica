@@ -1,0 +1,25 @@
+node_modules/
+dist/
+coverage/
+*.tsbuildinfo
+.DS_Store
+
+# Tick runtime artifacts (generated per run, never committed — see tick.yml)
+pending_commands.json
+command_results.json
+
+# Previews de sprites (8x, contact sheets, mapa mock) — artefatos de build,
+# regenerados por `npm run build:sprites` (assets/tools/) em assets/preview/.
+assets/preview/
+
+# Screenshots da auditoria visual do FPS (`npm run olhar`, D-35) — evidência
+# regenerável, nunca versionada (D-30).
+tools/bancadas/out/
+prototipos/fps/bake/out/
+
+# rascunho de sessão do coder — nunca commitar
+scratchpad/
+
+# worktrees temporários de agentes isolados — código vive nos commits deles,
+# nunca no diretório de trabalho principal
+.claude/worktrees/
