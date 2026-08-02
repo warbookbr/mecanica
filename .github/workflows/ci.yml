@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Instalar dependências
+        run: npm ci
+
+      # Os quatro casos vieram da oficina junto com o produto. Sem este passo
+      # eles existiriam sem nunca rodar, que é pior que teste nenhum: dá a
+      # impressão de cobertura que não existe.
+      - name: Testes
+        run: npm test
+
+      - name: Build
+        run: npm run build
+
+      # As peças resolvidas são geradas na oficina e copiadas para cá. Este
+      # passo não sabe se elas estão em dia com a receita — quem sabe é o
+      # `exportar:check` de warbookbr/nos-mecanifica. O que ele confere é mais
+      # básico e ainda assim necessário: que o arquivo é legível, que declara o
+      # formato que este código entende, e que traz as partes que o produto
+      # cita. Arquivo truncado numa cópia manual passaria por todo o resto.
+      - name: Peças resolvidas legíveis e no formato esperado
+        run: node tools/conferir-pecas.mjs
