@@ -4,16 +4,7 @@
   "peca": "freio-disco",
   "receita": "3c8f42d87b5fcef5",
   "meta": {
-    "fechada": true,
-    "nome": "freio-disco",
-    "tipo": "objeto",
-    "desc": "freio a disco dianteiro paramétrico — disco, cubo, pinça, suporte, pistão, pastilhas e flexível, cada face com identidade semântica",
-    "colisao": {
-      "forma": "cilindro",
-      "raio": 0.14051334456200237,
-      "altura": 0.32400000000000007,
-      "base": -0.14
-    }
+    "nome": "freio-disco"
   },
   "materiais": {
     "ferroFundido": {

@@ -4,15 +4,7 @@
   "peca": "roda-dianteira",
   "receita": "71a7e2e16943990a",
   "meta": {
-    "nome": "roda-dianteira",
-    "tipo": "objeto",
-    "desc": "roda dianteira paramétrica — pneu, aro oco e tampa central; compõe com freio-disco sem duplicar o cubo",
-    "colisao": {
-      "forma": "cilindro",
-      "raio": 0.3481738071710737,
-      "altura": 0.68,
-      "base": -0.34
-    }
+    "nome": "roda-dianteira"
   },
   "materiais": {
     "borracha": {
