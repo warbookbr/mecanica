@@ -11,7 +11,8 @@
    versão errada. Um `.json` cortado pela metade quebraria o build com uma
    mensagem de sintaxe que não diz nada sobre a causa; um arquivo de versão
    futura carregaria e desenharia errado, calado. */
-import { readFileSync, readdirSync } from 'node:fs';
+import { createHash } from 'node:crypto';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { FORMATO, VERSAO, lerPecaResolvida, parteDaFace } from '../src/autoria/ler-peca-resolvida.js';
@@ -19,9 +20,61 @@ import { SISTEMAS } from '../src/dominio/mecanica/freio-dianteiro-direito.js';
 
 const RAIZ = join(dirname(fileURLToPath(import.meta.url)), '..');
 const PASTA = join(RAIZ, 'pecas-resolvidas');
+const LEITOR = join(RAIZ, 'src/autoria/ler-peca-resolvida.js');
 
 const problemas = [];
-const arquivos = readdirSync(PASTA).filter((a) => a.endsWith('.json')).sort();
+
+/* ---------- PRIMEIRO O LEITOR, ANTES DE LER OU DESENHAR QUALQUER PEÇA ----------
+
+   `src/autoria/ler-peca-resolvida.js` é CÓPIA do arquivo de mesmo nome na
+   oficina. Nada, nos dois repositórios, compara as duas — a não ser isto.
+
+   Sem esta checagem o modo de falhar é silencioso: alguém muda o formato na
+   oficina, atualiza escritor e leitor de lá, todos os gates de lá ficam verdes.
+   A cópia daqui continua velha e lê com regra antiga um arquivo escrito com
+   regra nova. Não há exceção, porque as duas regras são válidas — só não são a
+   mesma. O desenho sai errado e ninguém é avisado.
+
+   A comparação vem ANTES de tudo de propósito. Ler uma peça com o leitor errado
+   e só depois reclamar seria diagnosticar o sintoma. */
+const alvoManifesto = join(PASTA, 'manifesto.json');
+if (!existsSync(alvoManifesto)) {
+  problemas.push('manifesto.json não existe; copie-o da oficina junto com as peças');
+} else {
+  let manifesto = null;
+  try { manifesto = JSON.parse(readFileSync(alvoManifesto, 'utf8')); } catch (e) {
+    problemas.push(`manifesto.json não é JSON válido — ${e.message}`);
+  }
+  if (manifesto) {
+    /* `\r\n` normalizado antes do hash, igual à oficina. Sem isso um clone no
+       Windows reprovaria por causa de um `\r`, e fim de linha não pode virar
+       defeito de produto. */
+    const local = createHash('sha256')
+      .update(readFileSync(LEITOR, 'utf8').replace(/\r\n/g, '\n'))
+      .digest('hex');
+    if (manifesto.leitor?.sha256 !== local) {
+      problemas.push(
+        'o LEITOR deste repositório não é o mesmo que a oficina publicou. '
+        + `manifesto: ${String(manifesto.leitor?.sha256).slice(0, 16)}…, aqui: ${local.slice(0, 16)}…. `
+        + 'Copie src/autoria/ler-peca-resolvida.js e pecas-resolvidas/ da oficina JUNTOS.',
+      );
+    }
+    if (manifesto.formato !== FORMATO || manifesto.versao !== VERSAO) {
+      problemas.push(`manifesto declara ${manifesto.formato} v${manifesto.versao}, e este código lê ${FORMATO} v${VERSAO}`);
+    }
+  }
+}
+
+/* leitor divergente invalida toda leitura abaixo. Parar aqui é mais honesto do
+   que somar diagnósticos derivados de uma premissa já quebrada. */
+if (problemas.length > 0) {
+  console.error(`conferir-pecas FALHOU — ${problemas.length} problema(s):`);
+  for (const p of problemas) console.error(`  ${p}`);
+  process.exit(1);
+}
+
+const arquivos = readdirSync(PASTA)
+  .filter((a) => a.endsWith('.json') && a !== 'manifesto.json').sort();
 
 if (arquivos.length === 0) problemas.push('pecas-resolvidas/ está vazia');
 

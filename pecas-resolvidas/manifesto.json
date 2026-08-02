@@ -1,0 +1,12 @@
+{
+  "formato": "mecanifica.peca-resolvida",
+  "versao": 1,
+  "leitor": {
+    "arquivo": "src/autoria/ler-peca-resolvida.js",
+    "sha256": "ecf326c2a79f33e888f31f3de8fe41f474a7237593c8d9ab316abc34ae97efc5"
+  },
+  "pecas": [
+    "freio-disco",
+    "roda-dianteira"
+  ]
+}
