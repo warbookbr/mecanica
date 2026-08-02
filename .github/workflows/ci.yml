@@ -20,9 +20,9 @@ jobs:
       - name: Instalar dependências
         run: npm ci
 
-      # Os quatro casos vieram da oficina junto com o produto. Sem este passo
-      # eles existiriam sem nunca rodar, que é pior que teste nenhum: dá a
-      # impressão de cobertura que não existe.
+      # A suíte veio da oficina junto com o produto. Sem este passo ela existiria
+      # sem nunca rodar, que é pior que teste nenhum: dá a impressão de cobertura
+      # que não existe.
       - name: Testes
         run: npm test
 

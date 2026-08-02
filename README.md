@@ -2,6 +2,8 @@
 
 A oficina 3D interativa que explica sistemas automotivos a clientes.
 
+🔧 **[Abrir a Mecânica](https://warbookbr.github.io/mecanica/)**
+
 Este repositório é **só o produto**: o que o cliente abre no navegador. Ele
 mostra o freio a disco dianteiro no contexto do veículo, e deixa girar, focar,
 explodir e isolar cada parte pelo nome.
@@ -39,7 +41,9 @@ um dia: alguém muda a peça e esquece de gerar o arquivo. Sem esse gate, o
 produto mostraria a peça de ontem com a mesma cara de sempre, e nenhum teste
 do núcleo perceberia — porque do lado do núcleo estaria tudo certo.
 
-Para atualizar uma peça aqui: gere na oficina e copie o `.json`.
+Para atualizar uma peça aqui: gere na oficina e copie juntos os JSONs, o
+`manifesto.json` e `src/autoria/ler-peca-resolvida.js`. O gate recusa conjunto
+incompleto, arquivo extra, versão desconhecida ou leitor divergente.
 
 ## Rodar
 
@@ -59,6 +63,13 @@ npm run preview    # serve o build
 | `src/cena/` | o galpão e o veículo de contexto |
 | `src/dominio/mecanica/` | onde cada sistema fica no veículo |
 | `src/interacao/` | seleção, inspeção e os modos de apresentação |
+
+## Licença e origem
+
+Código sob a [licença MIT](LICENSE). O produto foi separado de
+[`warbookbr/nos-mecanifica`](https://github.com/warbookbr/nos-mecanifica), que
+preserva o histórico e as contribuições herdadas de
+[`brigsd/nos`](https://github.com/brigsd/nos).
 
 `src/autoria/ler-peca-resolvida.js` é módulo puro: sem `node:`, sem Three.js e
 sem DOM. Ele é cópia do arquivo de mesmo nome na oficina, e um teste de lá

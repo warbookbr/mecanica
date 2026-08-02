@@ -13,16 +13,20 @@
    futura carregaria e desenharia errado, calado. */
 import { createHash } from 'node:crypto';
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
-import { dirname, join } from 'node:path';
+import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { FORMATO, VERSAO, lerPecaResolvida, parteDaFace } from '../src/autoria/ler-peca-resolvida.js';
 import { SISTEMAS } from '../src/dominio/mecanica/freio-dianteiro-direito.js';
 
 const RAIZ = join(dirname(fileURLToPath(import.meta.url)), '..');
-const PASTA = join(RAIZ, 'pecas-resolvidas');
+const pastaArg = process.argv.slice(2).find((a) => a.startsWith('--pasta='));
+const PASTA = pastaArg ? resolve(pastaArg.slice('--pasta='.length)) : join(RAIZ, 'pecas-resolvidas');
 const LEITOR = join(RAIZ, 'src/autoria/ler-peca-resolvida.js');
 
 const problemas = [];
+const arquivos = existsSync(PASTA)
+  ? readdirSync(PASTA).filter((a) => a.endsWith('.json') && a !== 'manifesto.json').sort()
+  : [];
 
 /* ---------- PRIMEIRO O LEITOR, ANTES DE LER OU DESENHAR QUALQUER PEÇA ----------
 
@@ -62,6 +66,15 @@ if (!existsSync(alvoManifesto)) {
     if (manifesto.formato !== FORMATO || manifesto.versao !== VERSAO) {
       problemas.push(`manifesto declara ${manifesto.formato} v${manifesto.versao}, e este código lê ${FORMATO} v${VERSAO}`);
     }
+    const declaradas = Array.isArray(manifesto.pecas) ? [...manifesto.pecas].sort() : null;
+    if (!declaradas) {
+      problemas.push("manifesto não declara a lista 'pecas'");
+    } else {
+      const faltam = declaradas.filter((nome) => !arquivos.includes(`${nome}.json`));
+      const sobram = arquivos.filter((arq) => !declaradas.includes(arq.replace(/\.json$/, '')));
+      if (faltam.length > 0) problemas.push(`faltam arquivos declarados no manifesto: ${faltam.join(', ')}`);
+      if (sobram.length > 0) problemas.push(`há arquivos fora do manifesto: ${sobram.join(', ')}`);
+    }
   }
 }
 
@@ -72,9 +85,6 @@ if (problemas.length > 0) {
   for (const p of problemas) console.error(`  ${p}`);
   process.exit(1);
 }
-
-const arquivos = readdirSync(PASTA)
-  .filter((a) => a.endsWith('.json') && a !== 'manifesto.json').sort();
 
 if (arquivos.length === 0) problemas.push('pecas-resolvidas/ está vazia');
 
